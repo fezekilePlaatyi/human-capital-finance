@@ -12,6 +12,10 @@ app.post("/wa", (req, res) => {
   index.handler(req, res);
 });
 
+app.get("/welcome_logo", function (req, res) {
+  res.sendFile(__dirname + "/logo.png");
+});
+
 app.listen(port, () => {
   console.log(`Server listening on port:- ${port}`);
 });

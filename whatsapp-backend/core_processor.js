@@ -6,7 +6,11 @@ const {
   messages,
   genericConsts,
 } = require("./constants");
-const { sendStaticTemplate, sendDyamicMessage } = require("./whatsapp");
+const {
+  sendStaticTemplate,
+  sendDyamicMessage,
+  sendWelcomeTemplate,
+} = require("./whatsapp");
 
 const checkApplication = async (whatsAppId) => {
   try {
@@ -22,7 +26,7 @@ const checkApplication = async (whatsAppId) => {
 
 const sendWelcomeMessage = async (whatsAppId) => {
   var payload = {
-    Status: applicationStatuses.CITIZENSHIP_CONFIRMATION,
+    Status: applicationStatuses.START,
     DateUpdated: new Date().getTime(),
     DateCreated: new Date().getTime(),
   };
@@ -30,7 +34,7 @@ const sendWelcomeMessage = async (whatsAppId) => {
   return dbHandler
     .updateApplicationMetaData(whatsAppId, payload)
     .then((results) => {
-      sendStaticTemplate(whatsAppId, templates.CITIZENSHIP_CONFIRMATION);
+      sendWelcomeTemplate(whatsAppId, templates.WELCOME);
     })
     .catch((error) => {
       console.error("An error occured while calling db handler...", error);
