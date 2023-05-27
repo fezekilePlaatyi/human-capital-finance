@@ -2,6 +2,7 @@ const {
   processIncomingMessage,
   processIncomingButtonClick,
   processIncomingFileUpload,
+  processIncomingInteractiveResponse,
 } = require("./core_processor");
 
 const verifyToken = (req) => {
@@ -21,7 +22,6 @@ const handler = async (req, res) => {
     }
   } else {
     const whatsAppPayload = messageData.entry[0].changes[0].value;
-
     if (whatsAppPayload.contacts && whatsAppPayload.contacts[0]) {
       const whatsAppId = whatsAppPayload.contacts[0].wa_id;
       const typeOfMessage = whatsAppPayload.messages[0].type;
@@ -42,10 +42,19 @@ const handler = async (req, res) => {
         ) {
           processIncomingFileUpload(whatsAppId, attachment, res);
         } else {
+          console.log(JSON.stringify(whatsAppPayload));
+          res.send("ok");
         }
+      } else if (typeOfMessage === "interactive") {
+        const interactiveReply = whatsAppPayload.messages[0].interactive;
+        processIncomingInteractiveResponse(whatsAppId, interactiveReply, res);
+      } else {
+        console.log(JSON.stringify(whatsAppPayload));
+        res.send("ok");
       }
     } else {
       console.log("No contacts found, i.e its probably message read event...");
+      res.send("ok");
     }
   }
 };
