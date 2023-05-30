@@ -54,6 +54,7 @@ const handler = async (req, res) => {
       }
     } else {
       console.log("No contacts found, i.e its probably message read event...");
+      // console.log(JSON.stringify(whatsAppPayload));
       res.send("ok");
     }
   }

@@ -3,7 +3,7 @@ const END_POINT = "https://graph.facebook.com/v16.0/109483948795799/messages";
 
 const headers = {
   Authorization:
-    "Bearer EAARb0YgwKGkBAJyoKu4QPHpZBXTSZASVN8mxzOFKGHndPFsmdmCdSbGNY92aNxAocPkNQmduVwAlbuJ1JjACXmNAP692nypzctTbelSiKgOGLUrTZAwEP4cZARK9ThR3t9MkBIKZACJ3HSPFYOTajtSyIpbS2f1VKqcE2pkE036WGKbLJ5EjoP6yJtXRH2nYC2knHfCkmeQZDZD",
+    "Bearer EAARb0YgwKGkBANDcKDHiVLYDcY2jipwkL8Y6QZAO8IoZAdib8ZB4R0aomMjPZCQNVfZCX5zvoU0NfGqS0Jl4ZCv95JKbZAPdLnbx7nlHvmTerjHebcXkZC9unbxUpQmephQc4EP23CET9NX9CB5pYZBZApUGv59TegrhPQVXYHMaMxXZB6JD7NXPfKuwIOq3HePB5KUPyYZAZAF0QJwZDZD",
   "Content-Type": "application/json",
 };
 
@@ -35,7 +35,7 @@ const sendWelcomeTemplate = (whatsAppId, templateId) => {
             {
               type: "image",
               image: {
-                link: "https://d62b-41-76-102-134.ngrok-free.app/welcome_logo",
+                link: "https://cd35-41-76-102-134.ngrok-free.app/welcome_logo",
               },
             },
           ],
@@ -283,6 +283,9 @@ const sendBankInformationPrompt = (whatsAppId) => {
       body: {
         text: `Please select answer on list below.`,
       },
+      footer: {
+        text: `Step 8/9`,
+      },
       action: {
         button: "Bank names list",
         sections: [
@@ -361,20 +364,20 @@ const sendTypeOfAccountPrompt = (whatsAppId) => {
         text: `Please select answer on list below.`,
       },
       action: {
-        button: "Type of account prompt",
+        button: "Type of account",
         sections: [
           {
             rows: [
               {
-                id: `llkkdkdkfdlP62t3f2`,
+                id: `monpkfd2t3f2`,
                 title: "Cheque",
               },
               {
-                id: `kjhhjdsj3h37e3`,
+                id: `dellkjhhjdsj`,
                 title: "Savings",
               },
               {
-                id: `llddks53823ld72t3f2`,
+                id: `kPmlddldt3k`,
                 title: "Transmission",
               },
             ],

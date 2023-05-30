@@ -136,14 +136,16 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                   Status: applicationStatuses.EMPLOYMENT_DETAILS_PROMP_ONE,
                 };
 
-                handleUpdateOnStatusAndSendDynamicMessage(
-                  whatsAppId,
-                  payload,
-                  messages.EMPLOYMENT_DETAILS_HEADING
-                ).finally(async () => {
-                  await sendDyamicMessage(
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendStaticTemplate(
                     whatsAppId,
-                    messages.EMPLOYMENT_DETAILS_PROMP_ONE
+                    templates.EMPLOYMENT_DETAILS_HEADING
+                  ),
+                ]).finally(async () => {
+                  await sendStaticTemplate(
+                    whatsAppId,
+                    templates.EMPLOYMENT_DETAILS_PROMP_ONE
                   );
                   res.send("done");
                 });
@@ -160,6 +162,39 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                 await Promise.all([
                   dbHandler.updateApplicationMetaData(whatsAppId, payload),
                   sendPaymentFrequencyPrompt(whatsAppId),
+                ]);
+                res.send("done");
+              }
+
+              break;
+
+            case applicationStatuses.EMPLOYMENT_DETAILS_PROMP_THREE:
+              {
+                const payload = {
+                  Status: applicationStatuses.LOAD_DETAILS_HEADING,
+                };
+
+                await Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendStaticTemplate(
+                    whatsAppId,
+                    templates.LOAD_DETAILS_HEADING
+                  ),
+                ]);
+                res.send("done");
+              }
+
+              break;
+
+            case applicationStatuses.LOAD_DETAILS_HEADING:
+              {
+                const payload = {
+                  Status: applicationStatuses.BANK_DETAILS_PROMPT_ONE,
+                };
+
+                await Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendBankInformationPrompt(whatsAppId),
                 ]);
                 res.send("done");
               }
@@ -355,21 +390,6 @@ const processIncomingButtonClick = async (whatsAppId, messageData, res) => {
             }
             break;
 
-          case applicationStatuses.BANK_DETAILS_PROMPT_ONE:
-            {
-              const payload = {
-                Status: applicationStatuses.BANK_DETAILS_PROMPT_TWO,
-              };
-
-              await Promise.all([
-                dbHandler.updateApplicationMetaData(whatsAppId, payload),
-                sendTypeOfAccountPrompt(whatsAppId),
-              ]);
-              res.send("done");
-            }
-
-            break;
-
           // case applicationStatuses.CITIZENSHIP_CONFIRMATION:
           //   {
           //     let templateId =
@@ -428,12 +448,17 @@ const processIncomingButtonClick = async (whatsAppId, messageData, res) => {
                   Status: applicationStatuses.IDENTIFICATION_DOC_UPLOAD,
                 };
 
-                handleUpdateOnStatusAndSendDynamicMessage(
+                sendStaticTemplate(
                   whatsAppId,
-                  payload,
-                  messageId
-                ).finally(() => {
-                  res.send("done");
+                  templates.DOCUMENT_UPLOAD_HEADING
+                ).then((results) => {
+                  handleUpdateOnStatusAndSendDynamicMessage(
+                    whatsAppId,
+                    payload,
+                    messageId
+                  ).finally(() => {
+                    res.send("done");
+                  });
                 });
               } else {
                 sendDyamicMessage(
@@ -469,8 +494,8 @@ const processIncomingButtonClick = async (whatsAppId, messageData, res) => {
       console.log(
         "Error occured while reading status. WhatsaApp Id: ",
         whatsAppId,
-        ". Error details: "
-        // error
+        ". Error details: ",
+        error
       );
       res.send("done");
     });
@@ -519,19 +544,19 @@ const processIncomingFileUpload = async (whatsAppId, attachment, res) => {
           case applicationStatuses.BANK_STATMENT_DOC:
             {
               const payload = {
-                Status: applicationStatuses.POPIA_AGREEMENT,
+                Status: applicationStatuses.CONSENT,
               };
 
               handleUpdateOnStatus(
                 whatsAppId,
                 payload,
-                templates.POPIA_AGREEMENT
+                templates.SERVICE_AGREEMENT_AND_TERMS
               )
                 .finally(() => {
                   return handleUpdateOnStatus(
                     whatsAppId,
                     payload,
-                    templates.THANK_YOU
+                    templates.CONSENT
                   );
                 })
                 .finally(() => {
@@ -671,18 +696,39 @@ const processIncomingInteractiveResponse = async (
 
             break;
 
-          case applicationStatuses.BANK_DETAILS_PROMPT_TWO: {
-            const payload = {
-              Status: applicationStatuses.BANK_DETAILS_PROMPT_THREE,
-            };
+          case applicationStatuses.BANK_DETAILS_PROMPT_ONE:
+            {
+              const payload = {
+                Status: applicationStatuses.BANK_DETAILS_PROMPT_TWO,
+              };
 
-            Promise.all([
-              dbHandler.updateApplicationMetaData(whatsAppId, payload),
-              sendDyamicMessage(whatsAppId, messages.BANK_DETAILS_PROMPT_THREE),
-            ]).finally(() => {
-              res.send("done");
-            });
-          }
+              Promise.all([
+                dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                sendTypeOfAccountPrompt(whatsAppId),
+              ]).finally(() => {
+                res.send("done");
+              });
+            }
+
+            break;
+
+          case applicationStatuses.BANK_DETAILS_PROMPT_TWO:
+            {
+              const payload = {
+                Status: applicationStatuses.BANK_DETAILS_PROMPT_THREE,
+              };
+
+              Promise.all([
+                dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                sendDyamicMessage(
+                  whatsAppId,
+                  messages.BANK_DETAILS_PROMPT_THREE
+                ),
+              ]).finally(() => {
+                res.send("done");
+              });
+            }
+            break;
 
           default: {
             console.log("On default", applicationResults.Status);
