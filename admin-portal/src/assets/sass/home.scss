@@ -1,0 +1,63 @@
+.home-page {
+    display: grid;
+    grid-template-columns: 80px calc(100vw - 80px);
+    height: 100vh;
+    
+    .side-bar {
+        background-color: $white-color;
+        height: 100vh;
+        border-right: 2px solid $light-grey;
+        padding: 2em 1em;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        column-gap: 2em;
+
+        img {
+            margin-bottom: 2em;
+        }
+
+        button {
+            width: 100%;
+            margin-bottom: 0.75em;
+            // padding: 0.5em 0;
+            height: 40px;
+            font-size: 18px;
+            color: $text-color;
+            border: 0;
+            outline: 0;
+            background-color: transparent;
+            transition: $transition;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+
+            &.sign-out {
+                color: #DC4C64;
+            }
+
+            &::before {
+                content: '';
+                height: 40px;
+                width: 5px;
+                display: block;
+                position: absolute;
+                left: -16px;
+                bottom: 0;
+                border-radius: 0 4px 4px 0;
+            }
+
+            &.active-btn {
+                color: $primary-color;
+                position: relative;
+
+                &::before {
+                    background-color: $secondary-color;
+                    transition: $transition;
+                }
+            }
+        }
+        
+    }
+}
