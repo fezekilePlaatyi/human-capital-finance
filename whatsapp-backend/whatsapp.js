@@ -1,9 +1,10 @@
 const axios = require("axios");
 const END_POINT = "https://graph.facebook.com/v16.0/109483948795799/messages";
+const moment = require("moment");
 
 const headers = {
   Authorization:
-    "Bearer EAARb0YgwKGkBANDcKDHiVLYDcY2jipwkL8Y6QZAO8IoZAdib8ZB4R0aomMjPZCQNVfZCX5zvoU0NfGqS0Jl4ZCv95JKbZAPdLnbx7nlHvmTerjHebcXkZC9unbxUpQmephQc4EP23CET9NX9CB5pYZBZApUGv59TegrhPQVXYHMaMxXZB6JD7NXPfKuwIOq3HePB5KUPyYZAZAF0QJwZDZD",
+    "Bearer EAARb0YgwKGkBAAn1kPfPeMpcnf5ZBcbUAhPhEndUlRdHlkl9YGZCgbH8GnZAUNySYAKPyyH4iwYIMjB6LBaZCwRneZBEmNeVmnFedjgww69BTnHhtn5bp6ofQuLdznmZBjZCiOBZANrEOt76Be4m9QzTqNxrLB1d2z7ZBKQvxjXbJZBbZAn0ZAtizXeuQsVwINZAcn2BTUMMePSn1KPzj2TrerEiIAZBp1cSWSxTEZD",
   "Content-Type": "application/json",
 };
 
@@ -35,7 +36,7 @@ const sendWelcomeTemplate = (whatsAppId, templateId) => {
             {
               type: "image",
               image: {
-                link: "https://cd35-41-76-102-134.ngrok-free.app/welcome_logo",
+                link: "https://f755-41-76-102-134.ngrok-free.app/welcome_logo",
               },
             },
           ],
@@ -180,7 +181,7 @@ const sendMaritusStatusPrompt = (whatsAppId) => {
   return sendRestApi(payload);
 };
 
-const sendPaymentFrequencyPrompt = (whatsAppId) => {
+const sendTypeOfMarriagePrompt = (whatsAppId) => {
   const payload = {
     messaging_product: "whatsapp",
     recipient_type: "individual",
@@ -190,27 +191,26 @@ const sendPaymentFrequencyPrompt = (whatsAppId) => {
       type: "list",
       header: {
         type: "text",
-        text: "Payment Frequency",
+        text: "Type of Marriage",
       },
       body: {
-        text: `Please select your payment frequency from list below.`,
+        text: `Please select your type of Marriage from list below.`,
       },
       action: {
-        button: "Payment Frequency",
+        button: "Marriage types",
         sections: [
           {
             rows: [
               {
-                id: `rssdsdsj3l325362t3f2`,
-                title: "Weekly",
+                id: `mmm5362t3f2`,
+                title: "ANC",
+                description: "Antenuptial Contract",
               },
+              ,
               {
-                id: `sdsjhssjfddpsdxsj3h37e3`,
-                title: "Fortnightly",
-              },
-              {
-                id: `kd2sds538237262t3f2`,
-                title: "Monthly",
+                id: `kmkmxsj3h37e3`,
+                title: "COP",
+                description: "Community of property",
               },
             ],
           },
@@ -243,20 +243,62 @@ const sendEmploymentStatusPrompt = (whatsAppId) => {
           {
             rows: [
               {
-                id: `rssdsdkdkfdlP62t3f2`,
+                id: `rssdsdkddlP62t3f2`,
                 title: "Permanent",
               },
               {
-                id: `sdsjhljdksdxsj3h37e3`,
+                id: `sdsjhlksdxsj3h37e3`,
                 title: "Fixed Term Contract",
               },
               {
-                id: `kd2sds53823ld72t3f2`,
+                id: `kd2sds533ld72t3f2`,
                 title: "Employed on Commission",
               },
               {
-                id: `Lksdl0232362lt3f2`,
+                id: `Lksdl02lt3f2`,
                 title: "Independent Contractor",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+
+  return sendRestApi(payload);
+};
+
+const sendPaymentFrequencyPrompt = (whatsAppId) => {
+  const payload = {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: whatsAppId,
+    type: "interactive",
+    interactive: {
+      type: "list",
+      header: {
+        type: "text",
+        text: "Payment Frequency",
+      },
+      body: {
+        text: `Please select your payment frequency from list below.`,
+      },
+      action: {
+        button: "Payment Frequency",
+        sections: [
+          {
+            rows: [
+              {
+                id: `rssdsdsj3l325362t3f2`,
+                title: "Weekly",
+              },
+              {
+                id: `sdsjhssjfddpsdxsj3h37e3`,
+                title: "Fortnightly",
+              },
+              {
+                id: `kd2sds538237262t3f2`,
+                title: "Monthly",
               },
             ],
           },
@@ -390,6 +432,124 @@ const sendTypeOfAccountPrompt = (whatsAppId) => {
   return sendRestApi(payload);
 };
 
+const sendAmountQualifiedFor = (whatsAppId, amount) => {
+  const payload = {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: whatsAppId,
+    type: "interactive",
+    interactive: {
+      type: "list",
+      header: {
+        type: "text",
+        text: "Loan Amount",
+      },
+      body: {
+        text: `Based on your credit score, you are pre-qualified for an Amount of R${amount}.\n\nClick *Continue* below to apply for it.`,
+      },
+      action: {
+        button: "Select reply.",
+        sections: [
+          {
+            rows: [
+              {
+                id: `ymspkfd2t3f2`,
+                title: "Continue",
+              },
+              {
+                id: `ndpspjhhjdsj`,
+                title: "Decline Offer",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+
+  return sendRestApi(payload);
+};
+
+const sendEmploymentStartDatePrompt = (whatsAppId) => {
+  const payload = {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: whatsAppId,
+    type: "interactive",
+    interactive: {
+      type: "list",
+      header: {
+        type: "text",
+        text: "Start Date Confirmation",
+      },
+      body: {
+        text: `Where you employed before 6 month from now i.e *${moment()
+          .subtract(6, "months")
+          .format("DD MMMM YYYY")}*?`,
+      },
+      action: {
+        button: "Click here to answer",
+        sections: [
+          {
+            rows: [
+              {
+                id: `mo5iid2t3f2`,
+                title: "Yes",
+              },
+              {
+                id: `dks3jhhjssj`,
+                title: "No",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+
+  return sendRestApi(payload);
+};
+
+const sendContractEndDatePrompt = (whatsAppId) => {
+  const payload = {
+    messaging_product: "whatsapp",
+    recipient_type: "individual",
+    to: whatsAppId,
+    type: "interactive",
+    interactive: {
+      type: "list",
+      header: {
+        type: "text",
+        text: "Start Date Confirmation",
+      },
+      body: {
+        text: `Does your contract ends after 4 months from now i.e *${moment()
+          .add(4, "months")
+          .format("DD MMMM YYYY")}*?`,
+      },
+      action: {
+        button: "Click here to answer",
+        sections: [
+          {
+            rows: [
+              {
+                id: `kskmolid2t3f2`,
+                title: "Yes",
+              },
+              {
+                id: `lskdo9jssj`,
+                title: "No",
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+
+  return sendRestApi(payload);
+};
+
 module.exports = {
   sendStaticTemplate: sendStaticTemplate,
   sendDyamicMessage: sendDyamicMessage,
@@ -400,4 +560,8 @@ module.exports = {
   sendEmploymentStatusPrompt: sendEmploymentStatusPrompt,
   sendBankInformationPrompt: sendBankInformationPrompt,
   sendTypeOfAccountPrompt: sendTypeOfAccountPrompt,
+  sendTypeOfMarriagePrompt: sendTypeOfMarriagePrompt,
+  sendEmploymentStartDatePrompt: sendEmploymentStartDatePrompt,
+  sendContractEndDatePrompt: sendContractEndDatePrompt,
+  sendAmountQualifiedFor: sendAmountQualifiedFor,
 };

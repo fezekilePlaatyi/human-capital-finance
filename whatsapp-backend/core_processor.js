@@ -9,12 +9,17 @@ const {
 const {
   sendTypeOfAccountPrompt,
   sendPaymentFrequencyPrompt,
+  sendAmountQualifiedFor,
   sendBankInformationPrompt,
   sendStaticTemplate,
   sendDyamicMessage,
   sendWelcomeTemplate,
   sendChooseEmployee,
   sendMaritusStatusPrompt,
+  sendTypeOfMarriagePrompt,
+  sendContractEndDatePrompt,
+  sendEmploymentStartDatePrompt,
+  sendEmploymentStatusPrompt,
 } = require("./whatsapp");
 
 const checkApplication = async (whatsAppId) => {
@@ -89,11 +94,12 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                   Status: applicationStatuses.EMPLOYER_SELECTION,
                 };
 
-                await Promise.all([
+                Promise.all([
                   dbHandler.updateApplicationMetaData(whatsAppId, payload),
                   sendChooseEmployee(whatsAppId),
-                ]);
-                res.send("done");
+                ]).finally(() => {
+                  res.send("done");
+                });
               }
 
               break;
@@ -115,7 +121,7 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
 
               break;
 
-            case applicationStatuses.IDENTIFICATION_PROMPT:
+            case applicationStatuses.PERMIT_NUMBER_PROMPT:
               {
                 const payload = {
                   Status: applicationStatuses.MARITUS_STATUS_PROMPT,
@@ -124,8 +130,43 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                 await Promise.all([
                   dbHandler.updateApplicationMetaData(whatsAppId, payload),
                   sendMaritusStatusPrompt(whatsAppId),
-                ]);
-                res.send("done");
+                ]).finally(() => {
+                  res.send("done");
+                });
+              }
+
+              break;
+
+            case applicationStatuses.IDENTIFICATION_PROMPT:
+              {
+                if (
+                  applicationResults.Identification_Type ==
+                  genericConsts.IS_NON_SOUTH_AFRICAN
+                ) {
+                  const payload = {
+                    Status: applicationStatuses.PERMIT_NUMBER_PROMPT,
+                  };
+
+                  const messageId = messages.PERMIT_NUMBER_MESSAGE;
+
+                  Promise.all([
+                    dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                    sendDyamicMessage(whatsAppId, messageId),
+                  ]).finally(() => {
+                    res.send("done");
+                  });
+                } else {
+                  const payload = {
+                    Status: applicationStatuses.MARITUS_STATUS_PROMPT,
+                  };
+
+                  Promise.all([
+                    dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                    sendMaritusStatusPrompt(whatsAppId),
+                  ]).finally(() => {
+                    res.send("done");
+                  });
+                }
               }
 
               break;
@@ -142,12 +183,13 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                     whatsAppId,
                     templates.EMPLOYMENT_DETAILS_HEADING
                   ),
-                ]).finally(async () => {
-                  await sendStaticTemplate(
+                ]).finally(() => {
+                  sendStaticTemplate(
                     whatsAppId,
                     templates.EMPLOYMENT_DETAILS_PROMP_ONE
-                  );
-                  res.send("done");
+                  ).finally(() => {
+                    res.send("done");
+                  });
                 });
               }
 
@@ -159,11 +201,12 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                   Status: applicationStatuses.EMPLOYMENT_DETAILS_PROMP_TWO,
                 };
 
-                await Promise.all([
+                Promise.all([
                   dbHandler.updateApplicationMetaData(whatsAppId, payload),
-                  sendPaymentFrequencyPrompt(whatsAppId),
-                ]);
-                res.send("done");
+                  sendEmploymentStatusPrompt(whatsAppId),
+                ]).finally(() => {
+                  res.send("done");
+                });
               }
 
               break;
@@ -171,7 +214,7 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
             case applicationStatuses.EMPLOYMENT_DETAILS_PROMP_THREE:
               {
                 const payload = {
-                  Status: applicationStatuses.LOAD_DETAILS_HEADING,
+                  Status: applicationStatuses.LOAD_PREQUALIFIER,
                 };
 
                 await Promise.all([
@@ -181,7 +224,10 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                     templates.LOAD_DETAILS_HEADING
                   ),
                 ]);
-                res.send("done");
+
+                sendAmountQualifiedFor(whatsAppId, "1900").finally(() => {
+                  res.send("done");
+                });
               }
 
               break;
@@ -192,11 +238,12 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                   Status: applicationStatuses.BANK_DETAILS_PROMPT_ONE,
                 };
 
-                await Promise.all([
+                Promise.all([
                   dbHandler.updateApplicationMetaData(whatsAppId, payload),
                   sendBankInformationPrompt(whatsAppId),
-                ]);
-                res.send("done");
+                ]).finally(() => {
+                  res.send("done");
+                });
               }
 
               break;
@@ -207,126 +254,18 @@ const processIncomingMessage = async (whatsAppId, messageBody, res) => {
                   Status: applicationStatuses.DEBIT_ORDER_AGREEMENT,
                 };
 
-                await Promise.all([
+                Promise.all([
                   dbHandler.updateApplicationMetaData(whatsAppId, payload),
                   sendStaticTemplate(
                     whatsAppId,
                     templates.DEBIT_ORDER_AGREEMENT
                   ),
-                ]);
-                res.send("done");
+                ]).finally(() => {
+                  res.send("done");
+                });
               }
 
               break;
-
-              break;
-
-            //   case applicationStatuses.EMPOLOYEE_NUMBER_PROMPT:
-            //     {
-            //       const payload = {
-            //         Status: applicationStatuses.PARTIAL_EMPLOYER_DETAILS,
-            //       };
-
-            //       handleUpdateOnStatus(
-            //         whatsAppId,
-            //         payload,
-            //         templates.PARTIAL_EMPLOYER_DETAILS
-            //       ).finally(() => {
-            //         res.send("done");
-            //       });
-            //     }
-
-            //     break;
-
-            //   case applicationStatuses.FULL_EMPLOYER_DETAILS:
-            //   case applicationStatuses.PARTIAL_EMPLOYER_DETAILS:
-            //     {
-            //       const payload = {
-            //         Status: applicationStatuses.SALARY_INFO_PROMPT,
-            //       };
-
-            //       handleUpdateOnStatus(
-            //         whatsAppId,
-            //         payload,
-            //         templates.SALARY_INFO_PROMPT
-            //       ).finally(() => {
-            //         res.send("done");
-            //       });
-            //     }
-
-            //     break;
-
-            //   case applicationStatuses.SALARY_INFO_PROMPT:
-            //     {
-            //       const payload = {
-            //         Status: applicationStatuses.LOAN_AMOUNT,
-            //       };
-
-            //       handleUpdateOnStatus(
-            //         whatsAppId,
-            //         payload,
-            //         templates.LOAN_AMOUNT
-            //       ).finally(() => {
-            //         res.send("done");
-            //       });
-            //     }
-
-            //     break;
-
-            //   case applicationStatuses.LOAN_AMOUNT:
-            //     {
-            //       const payload = {
-            //         Status: applicationStatuses.LOAN_PERIOD,
-            //       };
-
-            //       handleUpdateOnStatus(
-            //         whatsAppId,
-            //         payload,
-            //         templates.LOAN_PERIOD
-            //       ).finally(() => {
-            //         res.send("done");
-            //       });
-            //     }
-            //     break;
-
-            //   case applicationStatuses.LOAN_PERIOD:
-            //     {
-            //       const payload = {
-            //         Status: applicationStatuses.BANK_DETAILS_PROMPT,
-            //       };
-
-            //       handleUpdateOnStatusAndSendDynamicMessage(
-            //         whatsAppId,
-            //         payload,
-            //         messages.BANK_DETAILS_MESSAGE
-            //       ).finally(() => {
-            //         res.send("done");
-            //       });
-            //     }
-
-            //     break;
-
-            //   case applicationStatuses.BANK_DETAILS_PROMPT:
-            //     {
-            //       const payload = {
-            //         Status: applicationStatuses.DEBIT_ORDER_AGREEMENT,
-            //       };
-
-            //       handleUpdateOnStatus(
-            //         whatsAppId,
-            //         payload,
-            //         templates.DEBIT_ORDER_AGREEMENT
-            //       ).finally(() => {
-            //         res.send("done");
-            //       });
-            //     }
-
-            //     break;
-
-            //   default: {
-            //     console.log("On default", applicationResults.Status);
-            //     res.send("done");
-            //   }
           }
         } else {
           sendWelcomeMessage(whatsAppId).finally(() => {
@@ -390,53 +329,6 @@ const processIncomingButtonClick = async (whatsAppId, messageData, res) => {
             }
             break;
 
-          // case applicationStatuses.CITIZENSHIP_CONFIRMATION:
-          //   {
-          //     let templateId =
-          //       messageData == "Yes"
-          //         ? templates.ID_NUMBER_PROMPT
-          //         : templates.PASSPORT_NUMBER_PROMPT;
-
-          //     const payload = {
-          //       Identification_Type:
-          //         messageData == "Yes"
-          //           ? genericConsts.IS_SOUTH_AFRICAN
-          //           : genericConsts.IS_NON_SOUTH_AFRICAN,
-          //       Status: applicationStatuses.IDENTIFICATION_PROMPT,
-          //     };
-
-          //     handleUpdateOnStatus(whatsAppId, payload, templateId).finally(
-          //       () => {
-          //         res.send("done");
-          //       }
-          //     );
-          //   }
-          //   break;
-
-          // case applicationStatuses.CONFIRM_EMPLOYEE_NUMBER:
-          //   {
-          //     let templateId = "";
-          //     let status = "";
-          //     if (messageData == "Yes") {
-          //       templateId = templates.EMPOLOYEE_NUMBER_PROMPT;
-          //       status = applicationStatuses.EMPOLOYEE_NUMBER_PROMPT;
-          //     } else {
-          //       templateId = templates.FULL_EMPLOYER_DETAILS;
-          //       status = applicationStatuses.FULL_EMPLOYER_DETAILS;
-          //     }
-
-          //     const payload = {
-          //       Status: status,
-          //     };
-
-          //     handleUpdateOnStatus(whatsAppId, payload, templateId).finally(
-          //       () => {
-          //         res.send("done");
-          //       }
-          //     );
-          //   }
-          //   break;
-
           case applicationStatuses.DEBIT_ORDER_AGREEMENT:
             {
               let messageId = "";
@@ -479,8 +371,27 @@ const processIncomingButtonClick = async (whatsAppId, messageData, res) => {
 
             break;
 
+          case applicationStatuses.CONSENT:
+            {
+              if (messageData === "Continue") {
+                const payload = {
+                  Status: applicationStatuses.DONE,
+                };
+
+                handleUpdateOnStatus(
+                  whatsAppId,
+                  payload,
+                  templates.THANK_YOU
+                ).finally(() => {
+                  res.send("done");
+                });
+              } else {
+              }
+            }
+            break;
+
           default: {
-            console.log("On default");
+            console.log("On default", applicationResults.Status);
             res.send("done");
           }
         }
@@ -653,9 +564,67 @@ const processIncomingInteractiveResponse = async (
 
             break;
 
+          case applicationStatuses.EMPLOYMENT_DETAILS_PROMP_TWO:
+            {
+              const answerId = interactiveReply.list_reply.id;
+
+              if (answerId == "rssdsdkddlP62t3f2") {
+                const payload = {
+                  Status: applicationStatuses.EMPLOYMENT_DATE_CONFIRMATION,
+                };
+
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendEmploymentStartDatePrompt(whatsAppId),
+                ]).finally(() => {
+                  res.send("done");
+                });
+              } else if (
+                answerId == "sdsjhlksdxsj3h37e3" ||
+                answerId == "Lksdl02lt3f2"
+              ) {
+                const payload = {
+                  Status: applicationStatuses.EMPLOYMENT_DATE_CONFIRMATION,
+                };
+
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendContractEndDatePrompt(whatsAppId),
+                ]).finally(() => {
+                  res.send("done");
+                });
+              } else if (answerId == "kd2sds533ld72t3f2") {
+                const payload = {
+                  Status:
+                    applicationStatuses.LOAN_DECLINED_COMMISION_EMPLOYMENT,
+                };
+
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendDyamicMessage(
+                    whatsAppId,
+                    messages.LOAN_DECLINED_COMMISION_EMPLOYMENT
+                  ),
+                ]).finally(() => {
+                  res.send("done");
+                });
+              }
+            }
+            break;
+
           case applicationStatuses.MARITUS_STATUS_PROMPT:
             {
               if (interactiveReply.list_reply.id === "jslsajsjdj3h37e3") {
+                const payload = {
+                  Status: applicationStatuses.TYPE_OF_MARRIAGE_PROMPT,
+                };
+
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendTypeOfMarriagePrompt(whatsAppId),
+                ]).finally(() => {
+                  res.send("done");
+                });
               } else {
                 const payload = {
                   Status: applicationStatuses.PERSONAL_DETAILS_PROMPT,
@@ -677,23 +646,48 @@ const processIncomingInteractiveResponse = async (
 
             break;
 
-          case applicationStatuses.EMPLOYMENT_DETAILS_PROMP_TWO:
+          case applicationStatuses.TYPE_OF_MARRIAGE_PROMPT:
             {
               const payload = {
-                Status: applicationStatuses.EMPLOYMENT_DETAILS_PROMP_THREE,
+                Status: applicationStatuses.PERSONAL_DETAILS_PROMPT,
               };
 
-              Promise.all([
-                dbHandler.updateApplicationMetaData(whatsAppId, payload),
+              handleUpdateOnStatus(
+                whatsAppId,
+                payload,
+                templates.PERSONAL_DETAILS_PROMPT
+              )
+                .catch((error) => {
+                  console.log(error);
+                })
+                .finally(() => {
+                  res.send("done");
+                });
+            }
+            break;
+
+          case applicationStatuses.LOAD_PREQUALIFIER:
+            {
+              if (interactiveReply.list_reply.id === "ymspkfd2t3f2") {
+                const payload = {
+                  Status: applicationStatuses.BANK_DETAILS_PROMPT_ONE,
+                };
+
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendBankInformationPrompt(whatsAppId),
+                ]).finally(() => {
+                  res.send("done");
+                });
+              } else if (interactiveReply.list_reply.id === "ndpspjhhjdsj") {
                 sendDyamicMessage(
                   whatsAppId,
-                  messages.EMPLOYMENT_DETAILS_PROMP_THREE
-                ),
-              ]).finally(() => {
-                res.send("done");
-              });
+                  messages.PLEASE_APPLY_AGAIN_LATER
+                ).finally(() => {
+                  res.send("done");
+                });
+              }
             }
-
             break;
 
           case applicationStatuses.BANK_DETAILS_PROMPT_ONE:
@@ -728,6 +722,61 @@ const processIncomingInteractiveResponse = async (
                 res.send("done");
               });
             }
+            break;
+
+          case applicationStatuses.EMPLOYMENT_DATE_CONFIRMATION:
+            {
+              const answerId = interactiveReply.list_reply.id;
+
+              if (answerId == "mo5iid2t3f2" || answerId == "kskmolid2t3f2") {
+                const payload = {
+                  Status: applicationStatuses.EMPLOYMENT_DETAILS_PROMP_THREE,
+                };
+
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendDyamicMessage(
+                    whatsAppId,
+                    messages.EMPLOYMENT_DETAILS_PROMP_THREE
+                  ),
+                ]).finally(() => {
+                  res.send("done");
+                });
+              } else if (answerId == "dks3jhhjssj") {
+                const payload = {
+                  Status:
+                    applicationStatuses.LOAN_DECLINED_EMPLOYMENT_START_DATE,
+                };
+
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendDyamicMessage(
+                    whatsAppId,
+                    messages.LOAN_DECLINED_EMPLOYMENT_START_DATE
+                  ),
+                ]).finally(() => {
+                  res.send("done");
+                });
+              } else if (answerId == "lskdo9jssj") {
+                const payload = {
+                  Status: applicationStatuses.LOAN_DECLINED_CONTRACT_END_DATE,
+                };
+
+                Promise.all([
+                  dbHandler.updateApplicationMetaData(whatsAppId, payload),
+                  sendDyamicMessage(
+                    whatsAppId,
+                    messages.LOAN_DECLINED_CONTRACT_END_DATE
+                  ),
+                ]).finally(() => {
+                  res.send("done");
+                });
+              } else {
+                console.log("Unknown error: ", applicationResults.Status);
+                res.send("done");
+              }
+            }
+
             break;
 
           default: {

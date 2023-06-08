@@ -16,7 +16,14 @@ const applicationStatuses = {
   SERVICE_AGREEMENT_AND_TERMS: "SERVICE_AGREEMENT_AND_TERMS",
   CONSENT: "CONSENT",
   LOAD_DETAILS_HEADING: "LOAD_DETAILS_HEADING",
-  THANK_YOU: "THANK_YOU",
+  LOAD_PREQUALIFIER: "LOAD_PREQUALIFIER",
+  DONE: "DONE",
+  PERMIT_NUMBER_PROMPT: "PERMIT_NUMBER_PROMPT",
+  TYPE_OF_MARRIAGE_PROMPT: "TYPE_OF_MARRIAGE_PROMPT",
+  EMPLOYMENT_DATE_CONFIRMATION: "EMPLOYMENT_DATE_CONFIRMATION",
+  LOAN_DECLINED_EMPLOYMENT_START_DATE: "LOAN_DECLINED_EMPLOYMENT_START_DATE",
+  LOAN_DECLINED_CONTRACT_END_DATE: "LOAN_DECLINED_CONTRACT_END_DATE",
+  LOAN_DECLINED_COMMISION_EMPLOYMENT: "LOAN_DECLINED_COMMISION_EMPLOYMENT",
 
   REQUIRED_DOCS_CONFIRMATION: "REQUIRED_DOCS_CONFIRMATION",
   CONFIRM_EMPLOYEE_NUMBER: "CONFIRM_EMPLOYEE_NUMBER",
@@ -67,6 +74,7 @@ const templates = {
 };
 
 const messages = {
+  PERMIT_NUMBER_MESSAGE: `*Permit Number* \nPlease enter your permit number to continue.`,
   SUPPORTING_DOCS_NOTE: `*Supporting Documents*\n\nPlease note: only PDFs and images are allowed\n\n\`\`\`Step 4/5\`\`\``,
   ID_UPLOAD_MESSAGE: `Please upload a copy of your *ID Document*.`,
   PASSPORT_UPLOAD_MESSAGE: `Please upload a copy of your *Passport*.`,
@@ -75,6 +83,14 @@ const messages = {
   // EMPLOYMENT_DETAILS_PROMP_ONE: `*Please provide us with details*\n\n1. Employee Number\n2. Date of Employment(dd/mm/yyyy)\n\n\`\`\`Example Response\`\`\`\n\n1. HCF12345\n2. 01/10/2020`,
   EMPLOYMENT_DETAILS_PROMP_THREE: `*Current Salary*\n\n1. Net income e.g \`\`\`5500\`\`\`\n2.Total expenses e.g \`\`\`650\`\`\`\n\n*Note:* Money units is in South African Rands`,
   BANK_DETAILS_PROMPT_THREE: `Please enter your *Account Number.*`,
+  LOAN_DECLINED_EMPLOYMENT_START_DATE:
+    "*Dear Applicant*,\n\nWe apologise, the terms of the application is a person must have been employed 6 or more months on their Current employer. \n\nYou can apply again after 6 month from your start date.\n\nThank you.\n\n*Contact Details*\nCell Number: +27 62 445 8055\nEmail: info@humancapitalfinance.com",
+  LOAN_DECLINED_CONTRACT_END_DATE:
+    "*Dear Applicant*,\n\nWe apologise, the terms of the application is a person on contract must have been having their Contract ending 4 months after the date of application on their Current employer.\n\nThank you.\n\n*Contact Details*\nCell Number:  +27 62 445 8055\nEmail: info@humancapitalfinance.com",
+  LOAN_DECLINED_COMMISION_EMPLOYMENT:
+    "*Dear Applicant*,\n\nWe regret to inform you that the terms of the Service strictly do not allow application from person who is employed on Commission.\n\nThank you.\n\n*Contact Details*\nCell Number:  +27 62 445 8055\nEmail: info@humancapitalfinance.com",
+  PLEASE_APPLY_AGAIN_LATER:
+    "*You have declined the loan offer.*\n\nThank you for considering us and we hope to see you soon!",
 };
 
 const genericConsts = {
