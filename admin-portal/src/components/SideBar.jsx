@@ -1,23 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import IconLogo from "../assets/img/icon-logo.png"
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import ListIcon from '@mui/icons-material/List';
+import HourglassTopIcon from '@mui/icons-material/HourglassTop';
+import LogoutIcon from '@mui/icons-material/Logout';
+import SettingsIcon from '@mui/icons-material/Settings';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import { useNavigate} from "react-router-dom";
+import { globalActions } from "../slices/GlobalSlice";
 
 const SideBar = () => {
+    const tab = useSelector((state) => state.global.tab);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const onHandleTabChange = (tab) => {
+        dispatch(globalActions.changeTab(tab));
+        navigate("/" + tab)
+    }
+
     return(
         <>
             <div className="side-bar">
                 <div className="top-part">
                     <img src={IconLogo} alt="HCF Icon Logo" />
                     <div className="main-menu">
-                        <a href="./dashboard.html" className="active-btn"><i className="fa fa-home"></i></a>
-                        <a href="./full-applications.html" className=""><i className="fa fa-list"></i></a>
-                        <a href="/" className=""><i className="fa fa-hourglass-o"></i></a>
-                        <a href="/" className=""><i className="fa fa-money"></i></a>
+                        <button className={`${tab === "dashboard" && "active-btn"}`} onClick={() => onHandleTabChange("dashboard")}><DashboardIcon /></button>
+                        <button className={`${tab === "all_applications" && "active-btn"}`} onClick={() => onHandleTabChange("all_applications")}><ListIcon /></button>
+                        <button className={`${tab === "incomplete_applications" && "active-btn"}`} onClick={() => onHandleTabChange("incomplete_applications")}><HourglassTopIcon /></button>
+                        <button className={`${tab === "finances" && "active-btn"}`} onClick={() => onHandleTabChange("finances")}><AttachMoneyIcon /></button>
                         {/* <button className=""><i className="fa fa-sign-out"></i></button> */}
                     </div>
                 </div>
                 <div className="bottom-menu">
-                    <button className=""><i className="fa fa-cog"></i></button>
-                    <a href="./login.html" className="sign-out"><i className="fa fa-sign-out"></i></a>
+                    <button className=""><SettingsIcon /></button>
+                    <button className="sign-out"><LogoutIcon /></button>
                 </div>
             </div>
         </>

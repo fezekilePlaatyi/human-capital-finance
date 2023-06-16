@@ -1,5 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap');
 
+@import "~bootstrap/scss/bootstrap";
+
 $bg-color: #ffffff;
 $text-color: #9e9f9e;
 $white-color: #ffffff;
@@ -80,3 +82,4 @@ $box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
 @import "login_page";
 @import "home";
 @import "dashboard";
+@import "all_applications"
