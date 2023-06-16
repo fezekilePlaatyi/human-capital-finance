@@ -6,7 +6,7 @@ const Dashboard = () => {
         <>
         <div id="dashboard">
             <div className="header-part">
-                    <h1>Loan Applications</h1>
+                    <h1>Dashboard</h1>
                     {/* <div className="right-hand"></div> */}
             </div>
             <div className="applications_stats">

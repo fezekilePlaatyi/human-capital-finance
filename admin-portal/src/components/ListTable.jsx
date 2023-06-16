@@ -1,7 +1,13 @@
 import React from "react";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useNavigate } from "react-router-dom";
 
 const ListTable = () => {
+    const navigate = useNavigate();
+
+    const onViewApplicationHandler = () => {
+        navigate('single_application');
+    }
     return(
         <div className="list-table">
             <div className="list-item">
@@ -25,7 +31,7 @@ const ListTable = () => {
                     <h4 className="pending">Pending</h4>
                 </div>
                 <div className="item-data">
-                    <button className="border-btn">Full Review</button>
+                    <button className="border-btn" onClick={() => onViewApplicationHandler()}>Full Review</button>
                 </div>
                 <div className="item-data">
                     <button className="no-border-btn"><MoreVertIcon /></button>
@@ -52,7 +58,7 @@ const ListTable = () => {
                     <h4 className="pending">Pending</h4>
                 </div>
                 <div className="item-data">
-                    <button className="border-btn">Full Review</button>
+                    <button className="border-btn" onClick={() => onViewApplicationHandler()}>Full Review</button>
                 </div>
                 <div className="item-data">
                     <button className="no-border-btn"><MoreVertIcon /></button>

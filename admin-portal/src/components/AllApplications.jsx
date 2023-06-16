@@ -1,5 +1,5 @@
 import React from "react";
-import ListTable from "../components/ListTable";
+import ListTable from "./ListTable";
 
 const AllApplications = () => {
     return(

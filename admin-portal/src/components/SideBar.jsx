@@ -27,7 +27,7 @@ const SideBar = () => {
                     <img src={IconLogo} alt="HCF Icon Logo" />
                     <div className="main-menu">
                         <button className={`${tab === "dashboard" && "active-btn"}`} onClick={() => onHandleTabChange("dashboard")}><DashboardIcon /></button>
-                        <button className={`${tab === "all_applications" && "active-btn"}`} onClick={() => onHandleTabChange("all_applications")}><ListIcon /></button>
+                        <button className={`${tab === "applications" && "active-btn"}`} onClick={() => onHandleTabChange("applications")}><ListIcon /></button>
                         <button className={`${tab === "incomplete_applications" && "active-btn"}`} onClick={() => onHandleTabChange("incomplete_applications")}><HourglassTopIcon /></button>
                         <button className={`${tab === "finances" && "active-btn"}`} onClick={() => onHandleTabChange("finances")}><AttachMoneyIcon /></button>
                         {/* <button className=""><i className="fa fa-sign-out"></i></button> */}
