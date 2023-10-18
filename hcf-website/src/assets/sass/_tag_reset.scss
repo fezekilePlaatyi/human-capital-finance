@@ -1,0 +1,61 @@
+* {
+    font-family: 'roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+body {
+    -ms-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    box-sizing: border-box;
+    overflow-x: hidden !important;
+}
+
+a {
+    text-decoration: none !important;
+    outline: 0;
+}
+
+button {
+    outline: none !important;
+}
+
+input,
+textarea,
+select {
+    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 1em;
+    padding: 1em;
+    font-size: 16px;
+    outline: none;
+    font-weight: 400;
+    border: 1px solid $grey-text-color;
+    transition: $transition;
+    color: $dark-grey;
+
+    &:focus {
+        box-shadow: none;
+        border-color: $primary-color;
+        transition: $transition;
+        font-weight: 700;
+    }
+}
+
+textarea {
+    resize: none;
+    min-height: 150px;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+img {
+    width: 100%;
+}
