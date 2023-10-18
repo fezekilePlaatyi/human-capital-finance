@@ -44,8 +44,177 @@
         }
 
         .cards-side {
-            .nice-card {
-                height: 400px;
+            .loan-calculator {
+                min-height: 400px;
+                width: 100%;
+                max-width: 500px;
+                background-color: $white-color;
+                padding: 0.75em;
+                border-radius: 10px;
+
+                .calculator-title {
+                    font-size: 20px;
+                    background-color: #f4f7fa;
+                    padding: 0.6em 0.6em;
+                    border-radius: 10px;
+                    color: $secondary-color;
+                    margin-bottom: 1.5em;
+                }
+
+                .main-content {
+                    padding: 0 1em;
+                }
+
+                .slider-title {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .slider-title-label {
+                        font-size: 16px;
+                        font-weight: 500;
+                    }
+
+                    .slider-title-amount {
+                        font-size: 32px;
+                        color: $primary-color;
+                        font-weight: 700;
+                        line-height: 1;
+                    }
+                }
+
+                .slider-labels {
+                    display: flex;
+                    flex-direction: row;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    span {
+                        color: $text-color;
+                        font-size: 16px;
+                    }
+                }
+
+                .loan-slider-input {
+                    height: 3px;
+                    border-radius: 3px;
+                    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+                    transition: opacity .2s;
+                    width: 100% !important;
+                    padding: 0;
+                    background: #d3d3d3; /* Grey background */
+                    outline: none; /* Remove outline */
+                    opacity: 0.7; 
+                    margin: 0;
+
+                    &::-webkit-slider-runnable-track {
+                        background-color: $text-color;
+                        height: 10px;
+                        border-radius: 5px;
+                    }
+
+                    &::-webkit-slider-thumb {
+                        -webkit-appearance: none;
+                        appearance: none;
+                        width: 15px;
+                        height: 15px;
+                        border-radius: 50%;
+                        background: #53c351;
+                        cursor: pointer;
+                        margin-top: -3px;
+                    }
+
+                    &::-moz-range-thumb {
+                        width: 15px;
+                        height: 15px;
+                        border-radius: 50%;
+                        background: #53c351;
+                    }
+                }
+            }
+
+            .loan-repayment {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                column-gap: 2em;
+                margin-top: 1.5em;
+                margin-bottom: 1.5em;
+                border: 1px solid #e6e6e6;
+                border-radius: 10px;
+                padding: 1em;
+
+                .part-label {
+                    font-size: 14px;
+                    font-weight: 300;
+                    color: $text-color;
+                    margin-bottom: 0.5em;
+                    text-align: center;
+                }
+
+                .monthly-installment {
+                    width: 100%;
+                    border: 1px solid #e6e6e6;
+                    height: 48px;
+                    padding: 0.5em;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 16px;
+                    font-weight: 600;
+                    border-radius: 24px;
+                }
+
+                .period-increment {
+                    height: 48px;
+                    background-color: #f4f7fa;
+                    padding: 0.5em;
+                    position: relative;
+                    display: flex;
+                    flex-flow: row wrap;
+                    align-items: center;
+                    justify-content: center;
+                    width: 100% !important;
+                    border-radius: 24px;
+                }
+
+                .period-value {
+                    font-size: 14px;
+                    font-weight: 600;
+                }
+
+                button {
+                    position: absolute;
+                    background-color: $white-color;
+                    border: 0;
+                    width: 32px;
+                    height: 32px;
+                    border-radius: 50%;
+                    color: $primary-color;
+                    font-size: 22px;
+                    padding: 0 !important;
+                    line-height: 0;
+
+                    &.decrease-btn {
+                        left: 0.5em;
+                    }
+
+                    &.increase-btn {
+                        right: 0.5em;
+                    }
+                }
+            }
+
+            .loan-disclaimer {
+                margin-top: 1.5em;
+                
+                p {
+                    margin-bottom: 0 !important;
+                    text-align: center;
+                    font-size: 14px;
+                    color: $text-color;
+                    font-weight: 400;
+                }
             }
         }
     }

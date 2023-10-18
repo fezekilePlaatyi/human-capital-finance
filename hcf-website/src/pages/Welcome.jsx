@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import { Link } from "react-router-dom";
 import Navigation from "../components/Navigation";
 import CollapsibleItem from "../components/Collapsible";
+import LoanSlider from "../components/LoanSlider";
 
 const Welcome = () => {
     const [activeIndex, setActiveIndex] = useState(null);
@@ -20,7 +21,10 @@ const Welcome = () => {
                     <Link to="/" className="call-to-action">Apply Now</Link>
                 </div>
                 <div className="cards-side">
-                    <div className="nice-card"></div>
+                    <div className="loan-calculator shadow">
+                        <h4 className="calculator-title">Loan Calculator</h4>
+                        <LoanSlider />
+                    </div>
                 </div>
             </div>
 

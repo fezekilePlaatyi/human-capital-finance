@@ -11,6 +11,6 @@ const router = createBrowserRouter(
     createRoutesFromElements([
       <Route key="/welcome" path="/" element={<Welcome />}/>,
     ])
-  );
+);
   
   export default router;
